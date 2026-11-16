@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0a0e14">
-<title>Quantum-TUI v7.3</title>
+<title>Alex Devson // Quantum-TUI v7.5</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -72,17 +72,9 @@ body.lite-mode .window { box-shadow: none !important; border-color: var(--text-m
               width 250ms cubic-bezier(.2,.8,.2,1), height 250ms cubic-bezier(.2,.8,.2,1);
 }
 .window.dragging, .window.resizing { transition: none; }
-.window.focused {
-  border-color: var(--border-primary);
-  box-shadow: 0 0 20px var(--border-glow), 0 10px 40px rgba(0,0,0,.8);
-  z-index: 100;
-}
+.window.focused { border-color: var(--border-primary); box-shadow: 0 0 20px var(--border-glow), 0 10px 40px rgba(0,0,0,.8); z-index: 100; }
 .window.minimized { display: none; }
-.window.maximized {
-  top: 10px !important; left: 10px !important;
-  width: calc(100vw - 20px) !important;
-  height: calc(100vh - 90px) !important;
-}
+.window.maximized { top: 10px !important; left: 10px !important; width: calc(100vw - 20px) !important; height: calc(100vh - 90px) !important; }
 @keyframes windowIn { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
 
 .window-header {
@@ -94,38 +86,38 @@ body.lite-mode .window { box-shadow: none !important; border-color: var(--text-m
 }
 .window-header:active { cursor: grabbing; }
 .window-dots { display: flex; gap: 6px; }
-.window-dots span {
-  width: 12px; height: 12px; border-radius: 50%;
-  background: var(--accent-red); box-shadow: 0 0 6px currentColor;
-  cursor: pointer; transition: var(--transition);
-}
+.window-dots span { width: 12px; height: 12px; border-radius: 50%; background: var(--accent-red); box-shadow: 0 0 6px currentColor; cursor: pointer; transition: var(--transition); }
 .window-dots span:hover { transform: scale(1.2); filter: brightness(1.4); }
 .window-dots span:nth-child(2) { background: var(--accent-yellow); }
 .window-dots span:nth-child(3) { background: var(--text-primary); }
 .window-title { flex: 1; text-align: center; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
-.window-body { flex: 1; padding: 16px; overflow-y: auto; font-size: 0.85rem; scrollbar-width: thin; scrollbar-color: var(--border-primary) var(--bg-secondary); user-select: text; -webkit-overflow-scrolling: touch;}
+.window-body { flex: 1; padding: 16px; overflow-y: auto; font-size: 0.85rem; scrollbar-width: thin; user-select: text; -webkit-overflow-scrolling: touch;}
 .resize-handle { position: absolute; right: 0; bottom: 0; width: 16px; height: 16px; cursor: nwse-resize; background: linear-gradient(135deg, transparent 50%, var(--border-dim) 50%, var(--border-dim) 60%, transparent 60%, transparent 70%, var(--border-dim) 70%, var(--border-dim) 80%, transparent 80%); }
 
-/* DOCK */
+/* DOCK (FIX OVERFLOW Y SAFE AREA) */
 #dock {
-  position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
-  background: rgba(13,17,23,.92); border: 1px solid var(--border-dim);
-  border-radius: 14px; padding: 8px 12px;
+  position: fixed; 
+  bottom: calc(12px + env(safe-area-inset-bottom)); 
+  left: 50%; transform: translateX(-50%);
+  background: rgba(13,17,23,.95); border: 1px solid var(--border-dim);
+  border-radius: 16px; padding: 8px 12px;
   display: flex; gap: 8px; z-index: 5000; backdrop-filter: blur(14px);
   box-shadow: 0 8px 32px rgba(0,0,0,.7), var(--glow);
-  align-items: center; max-width: calc(100vw - 24px);
-  overflow-x: auto; scrollbar-width: none; /* Ocultar scroll en Firefox */
+  align-items: center; 
+  max-width: calc(100vw - 20px);
+  overflow-x: auto; /* Scroll horizontal */
+  scrollbar-width: none; /* Firefox */
 }
-#dock::-webkit-scrollbar { display: none; } /* Ocultar scroll en Chrome/Safari */
+#dock::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
 .dock-btn {
   background: transparent; border: 1px solid var(--border-dim); color: var(--text-secondary);
   border-radius: 10px; font-family: var(--font-mono); font-size: 1.25rem; cursor: pointer;
   transition: all 200ms cubic-bezier(.34,1.56,.64,1);
   display: flex; align-items: center; justify-content: center;
-  width: 44px; height: 44px; position: relative; flex-shrink: 0;
+  width: 44px; height: 44px; position: relative; flex-shrink: 0; /* Evita que se aplasten */
 }
-.dock-btn:hover, .dock-btn:active { color: var(--text-primary); border-color: var(--border-primary); box-shadow: 0 0 14px var(--border-glow); transform: translateY(-4px) scale(1.05); }
+.dock-btn:hover, .dock-btn:active { color: var(--text-primary); border-color: var(--border-primary); box-shadow: 0 0 14px var(--border-glow); transform: translateY(-2px) scale(1.05); }
 .dock-btn.active { color: var(--bg-primary); background: var(--text-primary); border-color: var(--text-primary); }
 .dock-btn::after {
   content: attr(data-label); position: absolute; bottom: calc(100% + 10px); left: 50%;
@@ -156,7 +148,7 @@ body.lite-mode .window { box-shadow: none !important; border-color: var(--text-m
 .dock-menu-item .mi-icon { font-size: 1.1rem; width: 20px; text-align: center; }
 .dock-menu-divider { height: 1px; background: var(--border-dim); margin: 4px 0; }
 
-/* UTILIDADES */
+/* UTILIDADES Y MINI APPS */
 .swatch { width: 24px; height: 24px; border: 2px solid transparent; border-radius: 4px; transition: var(--transition); cursor: pointer; position: relative; display:inline-block;}
 .swatch:hover { transform: scale(1.15); border-color: #fff; }
 .swatch.active { border-color: #fff; box-shadow: 0 0 10px #fff; }
@@ -165,17 +157,21 @@ body.lite-mode .window { box-shadow: none !important; border-color: var(--text-m
 .piano-key:hover { background: var(--bg-hover); border-color: var(--text-primary); }
 .piano-key.active { background: var(--text-primary); color: var(--bg-primary); transform: scale(0.95); box-shadow: 0 0 15px var(--border-glow); }
 
-.hack-input { background: transparent; border: none; outline: none; color: var(--accent-red); font-family: var(--font-mono); font-size: 1.5rem; text-align: center; width: 100%; letter-spacing: 5px; }
+.hack-input, .app-input { background: var(--bg-secondary); border: 1px solid var(--border-dim); outline: none; color: var(--text-primary); font-family: var(--font-mono); font-size: 1rem; padding: 10px; width: 100%; border-radius: 4px; margin-bottom: 10px; transition: border 0.2s;}
+.hack-input:focus, .app-input:focus { border-color: var(--text-primary); box-shadow: var(--glow); }
+.hack-input { font-size: 1.5rem; text-align: center; letter-spacing: 5px; }
+
+.app-btn { background: var(--text-primary); color: var(--bg-primary); border: none; padding: 10px 15px; font-family: var(--font-mono); font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; margin-bottom: 10px; transition: all 0.2s;}
+.app-btn:hover { box-shadow: 0 0 15px var(--border-glow); transform: scale(1.02); }
 
 /* ================================================================
-   RESPONSIVE ADAPTATION
+   RESPONSIVE ADAPTATION (Móviles y Tablets)
    ================================================================ */
-
-/* 1. DISPOSITIVOS MÓVILES Y TABLETS */
 @media (max-width: 1024px), (pointer: coarse) {
   #desktop {
     position: relative; overflow-y: auto; overflow-x: hidden;
-    padding: 12px 12px 100px 12px; display: flex; flex-direction: column; gap: 12px; min-height: 100vh;
+    padding: 12px 12px calc(110px + env(safe-area-inset-bottom)) 12px; 
+    display: flex; flex-direction: column; gap: 12px; min-height: 100vh;
   }
   .window {
     position: relative !important; left: auto !important; top: auto !important;
@@ -186,17 +182,18 @@ body.lite-mode .window { box-shadow: none !important; border-color: var(--text-m
   .window .resize-handle { display: none; }
   .window-body { max-height: none; overflow: visible; }
   
-  /* DOCK DESLIZABLE (Carrusel táctil) */
+  /* Ajustes del Dock para Móvil */
   #dock {
-    bottom: 8px; padding: 6px 8px; gap: 6px; border-radius: 16px; 
-    max-width: calc(100vw - 16px); 
-    justify-content: flex-start; /* Alinear a la izquierda para permitir scroll */
+    bottom: calc(8px + env(safe-area-inset-bottom)); 
+    padding: 6px 8px; gap: 6px; border-radius: 16px; 
+    width: calc(100vw - 24px); /* Ocupa el ancho disponible */
+    max-width: 100%;
+    justify-content: flex-start; /* Alinear para scroll */
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
   }
-  .dock-btn { width: 44px; height: 44px; font-size: 1.2rem; border-radius: 8px; }
-  .dock-btn::after { display: none; }
+  .dock-btn { width: 44px; height: 44px; font-size: 1.2rem; }
+  .dock-btn::after { display: none; } /* Quitar tooltips en táctil */
   .dock-menu { right: 0; bottom: calc(100% + 8px); position: fixed; right: 16px; margin-bottom: 60px;}
 
   /* D-Pad para juegos táctiles */
@@ -206,10 +203,8 @@ body.lite-mode .window { box-shadow: none !important; border-color: var(--text-m
   .dpad-empty { visibility: hidden; }
 }
 
-/* 2. DISPOSITIVOS MUY PEQUEÑOS */
 @media (max-width: 400px) {
   html { font-size: 14px; }
-  .piano-key { font-size: 8px; }
   .window-body { padding: 12px; }
   .dock-btn { width: 40px; height: 40px; font-size: 1.1rem; }
   #windowCounter { display: none; } 
@@ -230,13 +225,13 @@ canvas { max-width: 100%; height: auto; object-fit: contain; }
 <canvas id="matrix"></canvas>
 <div id="desktop"></div>
 
-<!-- DOCK CON SCROLL HORIZONTAL -->
+<!-- DOCK -->
 <div id="dock">
   <button class="dock-btn" data-open="system" data-label="Inicio">🖥</button>
   <button class="dock-btn" data-open="shell" data-label="Consola">❯</button>
   <button class="dock-btn" data-open="music" data-label="Música">🎵</button>
+  <button class="dock-btn" data-open="files" data-label="Proyectos">📁</button>
   <button class="dock-btn" id="modeToggle" data-label="Móvil/PC">📱</button>
-  <button class="dock-btn" id="liteToggle" data-label="Modo Lite">🔋</button>
   <div class="dock-sep"></div>
   <span id="windowCounter">0/4</span>
   <div class="dock-menu-wrap">
@@ -246,20 +241,22 @@ canvas { max-width: 100%; height: auto; object-fit: contain; }
       <button class="dock-menu-item" data-open="skills"><span class="mi-icon">⚡</span><span>Skills</span></button>
       <button class="dock-menu-item" data-open="collabs"><span class="mi-icon">🤝</span><span>Collabs</span></button>
       <div class="dock-menu-divider"></div>
-      <button class="dock-menu-item" data-open="files"><span class="mi-icon">📁</span><span>Proyectos</span></button>
       <button class="dock-menu-item" data-open="piano"><span class="mi-icon">🎹</span><span>Piano</span></button>
       <button class="dock-menu-item" data-open="drum"><span class="mi-icon">🥁</span><span>Drum Machine</span></button>
+      <button class="dock-menu-item" data-open="morse"><span class="mi-icon">📡</span><span>Traductor Morse</span></button>
+      <button class="dock-menu-item" data-open="generator"><span class="mi-icon">🔐</span><span>Generador Pass</span></button>
       <div class="dock-menu-divider"></div>
       <button class="dock-menu-item" data-open="snake"><span class="mi-icon">🐍</span><span>Snake</span></button>
       <button class="dock-menu-item" data-open="tetris"><span class="mi-icon">🧱</span><span>Tetris</span></button>
       <button class="dock-menu-item" data-open="2048"><span class="mi-icon">🔢</span><span>2048</span></button>
       <button class="dock-menu-item" data-open="hack"><span class="mi-icon">💻</span><span>Hackeo</span></button>
       <div class="dock-menu-divider"></div>
-      <button class="dock-menu-item" id="helpMenuItem"><span class="mi-icon">❔</span><span>Ayuda</span></button>
+      <button class="dock-menu-item" id="liteToggle"><span class="mi-icon">🔋</span><span>Modo Lite</span></button>
     </div>
   </div>
 </div>
 
+<!-- OVERLAY DE AYUDA -->
 <div class="help-overlay" id="helpOverlay" style="position:fixed;inset:0;background:rgba(10,14,20,.92);backdrop-filter:blur(4px);z-index:10000;display:none;align-items:center;justify-content:center;padding:20px;">
   <div style="background:var(--bg-panel);border:1px solid var(--border-primary);border-radius:6px;padding:20px;max-width:600px;width:100%;box-shadow:0 0 40px var(--border-glow);">
     <h2 style="color:var(--accent-yellow);margin-bottom:15px;">❯ ATAJOS DE TECLADO</h2>
@@ -270,11 +267,11 @@ canvas { max-width: 100%; height: auto; object-fit: contain; }
       <span style="color:var(--accent-cyan);font-weight:bold;">Alt + M</span><span>Móvil / PC</span>
       <span style="color:var(--accent-cyan);font-weight:bold;">Tab (Shell)</span><span>Auto-completar comandos</span>
     </div>
-    <button onclick="closeHelp()" style="margin-top:20px;background:var(--text-primary);color:var(--bg-primary);border:none;padding:8px 15px;border-radius:4px;cursor:pointer;font-weight:bold;width:100%;">Cerrar</button>
+    <button onclick="closeHelp()" style="margin-top:20px;background:var(--text-primary);color:var(--bg-primary);border:none;padding:10px;border-radius:4px;cursor:pointer;font-weight:bold;width:100%;">Cerrar</button>
   </div>
 </div>
 
-<div class="toast" id="toast" style="position:fixed;bottom:90px;right:20px;background:var(--bg-panel);border:1px solid var(--border-primary);color:var(--text-primary);padding:10px 16px;border-radius:4px;font-size:.85rem;box-shadow:var(--glow);z-index:10001;opacity:0;transform:translateY(10px);transition:all 300ms ease;pointer-events:none;"></div>
+<div class="toast" id="toast" style="position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));right:20px;background:var(--bg-panel);border:1px solid var(--border-primary);color:var(--text-primary);padding:10px 16px;border-radius:4px;font-size:.85rem;box-shadow:var(--glow);z-index:10001;opacity:0;transform:translateY(10px);transition:all 300ms ease;pointer-events:none;"></div>
 
 <div id="bootScreen">
   <pre class="boot-logo">
@@ -386,7 +383,6 @@ function toggleLiteMode() {
   document.body.classList.toggle('lite-mode');
   const isLite = document.body.classList.contains('lite-mode');
   localStorage.setItem('tui-lite', isLite);
-  document.getElementById('liteToggle').classList.toggle('active', isLite);
   toast(isLite ? '🔋 Modo Lite Activado' : '⚡ Modo Lite Desactivado');
 }
 
@@ -567,15 +563,15 @@ const BUILDERS = {
     const body = `
       <h2 style="color:var(--accent-yellow);border-bottom:1px dashed var(--border-dim);padding-bottom:5px;">📁 /PROYECTOS</h2>
       <div style="margin-top:15px; display:flex; flex-direction:column; gap:8px;">
-        <div onclick="alert('Abriendo Proyecto A...')" style="cursor:pointer; border:1px solid var(--border-dim); padding:12px; border-radius:4px; background:var(--bg-secondary);">
+        <div onclick="BUILDERS.about()" style="cursor:pointer; border:1px solid var(--border-dim); padding:12px; border-radius:4px; background:var(--bg-secondary);">
           <div style="color:var(--accent-cyan); font-weight:bold;">📄 aetheria-dsp.js</div>
           <div style="font-size:0.75rem; color:var(--text-muted);">Audio Worklet para sintetizador web.</div>
         </div>
-        <div onclick="alert('Abriendo Proyecto B...')" style="cursor:pointer; border:1px solid var(--border-dim); padding:12px; border-radius:4px; background:var(--bg-secondary);">
+        <div onclick="BUILDERS.collabs()" style="cursor:pointer; border:1px solid var(--border-dim); padding:12px; border-radius:4px; background:var(--bg-secondary);">
           <div style="color:var(--accent-cyan); font-weight:bold;">📦 hyperedge-core.rs</div>
           <div style="font-size:0.75rem; color:var(--text-muted);">Protocolo de caché distribuido en Rust.</div>
         </div>
-        <div onclick="alert('Abriendo Proyecto C...')" style="cursor:pointer; border:1px solid var(--border-dim); padding:12px; border-radius:4px; background:var(--bg-secondary);">
+        <div onclick="BUILDERS.skills()" style="cursor:pointer; border:1px solid var(--border-dim); padding:12px; border-radius:4px; background:var(--bg-secondary);">
           <div style="color:var(--accent-cyan); font-weight:bold;">📜 kernel-ai-cli.py</div>
           <div style="font-size:0.75rem; color:var(--text-muted);">Co-piloto de terminal con LLM local.</div>
         </div>
@@ -584,9 +580,44 @@ const BUILDERS = {
     return createWindow({ id: 'files', title: '📁 File Manager', body });
   },
 
+  // NUEVA APP: GENERADOR DE PASS
+  generator: () => {
+    const body = `
+      <h2 style="color:var(--accent-yellow);border-bottom:1px dashed var(--border-dim);padding-bottom:5px;">🔐 GENERADOR SEGURO</h2>
+      <div style="margin-top:15px;">
+        <input type="text" id="passResult" class="app-input" readonly value="Haz clic en Generar" style="text-align:center; font-weight:bold; color:var(--accent-magenta);">
+        <button class="app-btn" onclick="genPassword(16)">Generar Contraseña (16 chars)</button>
+        <button class="app-btn" style="background:transparent; border:1px solid var(--border-primary); color:var(--text-primary);" onclick="copyPassword()">Copiar al Portapapeles</button>
+      </div>
+    `;
+    return createWindow({ id: 'generator', title: 'PassGen.app', body });
+  },
+
+  // NUEVA APP: MORSE
+  morse: () => {
+    const body = `
+      <h2 style="color:var(--accent-yellow);border-bottom:1px dashed var(--border-dim);padding-bottom:5px;">📡 CÓDIGO MORSE</h2>
+      <div style="margin-top:15px;">
+        <input type="text" id="morseInput" class="app-input" placeholder="Escribe texto aquí...">
+        <button class="app-btn" onclick="playMorse()">▶ Reproducir Sonido</button>
+        <textarea id="morseResult" class="app-input" readonly style="height:80px; resize:none; color:var(--accent-cyan); font-size:1.2rem; text-align:center;"></textarea>
+        <div style="font-size:0.75rem; text-align:center; color:var(--text-muted);">Tabla: A .- | B -... | C -.-. | D -.. | E .</div>
+      </div>
+    `;
+    const win = createWindow({ id: 'morse', title: 'MorseComms', body });
+    if(win) {
+      win.querySelector('#morseInput').addEventListener('input', (e) => {
+        const txt = e.target.value.toUpperCase();
+        const morse = { 'A':'.-','B':'-...','C':'-.-.','D':'-..','E':'.','F':'..-.','G':'--.','H':'....','I':'..','J':'.---','K':'-.-','L':'.-..','M':'--','N':'-.','O':'---','P':'.--.','Q':'--.-','R':'.-.','S':'...','T':'-','U':'..-','V':'...-','W':'.--','X':'-..-','Y':'-.--','Z':'--..',' ':'/' };
+        win.querySelector('#morseResult').value = txt.split('').map(c => morse[c] || c).join(' ');
+      });
+    }
+    return win;
+  },
+
   shell: () => {
     const footer = `<div style="display:flex;padding:12px;background:var(--bg-secondary);border-top:1px solid var(--border-dim);gap:8px;"><span style="color:var(--accent-cyan);">$</span><input id="shellInput" style="flex:1;background:transparent;border:none;outline:none;color:var(--text-primary);font-family:var(--font-mono);font-size:16px;" autocomplete="off"></div>`;
-    const body = `<div id="shellOutput" style="font-size:0.85rem;"><div style="color:var(--text-primary);">Shell v7.3 (Tab para autocompletar)</div></div>`;
+    const body = `<div id="shellOutput" style="font-size:0.85rem;"><div style="color:var(--text-primary);">Shell v7.5 (Tab para autocompletar)</div></div>`;
     const win = createWindow({ id: 'shell', title: 'shell', body, footer });
     if (win) {
       const input = win.querySelector('#shellInput');
@@ -655,8 +686,8 @@ const BUILDERS = {
       <h2 style="color:var(--accent-yellow);border-bottom:1px dashed var(--border-dim);padding-bottom:5px;">🥁 DRUM MACHINE</h2>
       <div id="drumGrid" style="display:grid; grid-template-columns:40px repeat(16,1fr); gap:2px; margin-top:15px;"></div>
       <div style="margin-top:15px; display:flex; justify-content:space-between;">
-        <button onclick="toggleDrum()" style="background:var(--text-primary);color:var(--bg-primary);padding:8px 15px;border:none;border-radius:3px;cursor:pointer; font-weight:bold;">PLAY/STOP</button>
-        <button onclick="clearDrum()" style="background:transparent;border:1px solid var(--border-dim);color:var(--text-primary);padding:8px 15px;border-radius:3px;cursor:pointer;">CLEAR</button>
+        <button class="app-btn" style="margin:0; width:48%;" onclick="toggleDrum()">PLAY/STOP</button>
+        <button class="app-btn" style="margin:0; width:48%; background:transparent; border:1px solid var(--border-primary); color:var(--text-primary);" onclick="clearDrum()">CLEAR</button>
       </div>
     `;
     const win = createWindow({ id: 'drum', title: 'Drum Sequencer', body });
@@ -736,6 +767,30 @@ const BUILDERS = {
     const win = createWindow({ id: 'hack', title: 'BruteForce.sh', body });
     if (win) startHack(win);
     return win;
+  }
+};
+
+/* LOGICA EXTRA (Generador, Morse, Juegos) */
+window.genPassword = (len) => {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+  let pass = "";
+  for (let i = 0; i < len; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length));
+  document.getElementById('passResult').value = pass;
+  playBeep(1000, 0.05);
+};
+window.copyPassword = () => {
+  const val = document.getElementById('passResult').value;
+  navigator.clipboard.writeText(val).then(() => toast("📋 Contraseña copiada"));
+};
+window.playMorse = () => {
+  const text = document.getElementById('morseResult').value;
+  if(!text) return;
+  let time = 0;
+  for(let i=0; i<text.length; i++) {
+    const c = text[i];
+    if(c === '.') { setTimeout(()=>playBeep(800, 0.1), time); time += 150; }
+    else if(c === '-') { setTimeout(()=>playBeep(800, 0.3), time); time += 350; }
+    else if(c === ' ') { time += 300; }
   }
 };
 
@@ -943,7 +998,6 @@ function initDock() {
   document.getElementById('menuToggle').onclick = (e) => { e.stopPropagation(); document.getElementById('dockMenu').classList.toggle('open'); };
   document.addEventListener('click', (e) => { if(!e.target.closest('.dock-menu-wrap')) closeDockMenu(); });
   document.getElementById('liteToggle').onclick = toggleLiteMode;
-  document.getElementById('helpMenuItem').onclick = () => { document.getElementById('helpOverlay').style.display='flex'; closeDockMenu(); };
   document.getElementById('modeToggle').onclick = () => { document.body.classList.toggle('mobile-mode'); };
 }
 function closeDockMenu() { document.getElementById('dockMenu').classList.remove('open'); }
@@ -955,7 +1009,7 @@ async function init() {
   
   initMatrix(); initDock();
   
-  const bootLines = ['[ OK ] Initializing v7.3 Scrollable...', '[ OK ] Loading piano module...', '[ OK ] Building file manager...', '[ OK ] 🐱 MEOW. Ready.'];
+  const bootLines = ['[ OK ] Initializing v7.5 Systems...', '[ OK ] Loading UI assets...', '[ OK ] 🐱 MEOW. Ready.'];
   const bEl = document.getElementById('bootLines');
   for (let i=0; i<bootLines.length; i++) {
     bEl.innerHTML += `<div style="opacity:0;animation:bootLine 0.2s forwards;">${bootLines[i]}</div>`;
@@ -971,7 +1025,6 @@ async function init() {
     if (e.altKey) {
       if (e.key === 'q' || e.key === 'Q') { if(State.focusedWindowId) closeWindow(State.focusedWindowId); e.preventDefault(); }
       if (e.key === 'k' || e.key === 'K') { BUILDERS.shell(); e.preventDefault(); }
-      if (e.key === 'm' || e.key === 'M') { document.getElementById('modeToggle').click(); e.preventDefault(); }
       if (['1','2','3','4'].includes(e.key)) {
         const ids = Object.keys(State.windows);
         const idx = parseInt(e.key) - 1;
