@@ -142,12 +142,14 @@ body.lite-mode .window { box-shadow: none !important; border-color: var(--text-m
 
 .dock-menu-wrap { position: relative; flex-shrink: 0; }
 .dock-menu {
-  position: absolute; bottom: calc(100% + 12px); right: 0;
+  position: fixed; /* <-- CAMBIO CLAVE: Se saca del Dock para que no lo recorte */
+  bottom: 80px;    /* Posición respecto a la pantalla */
+  right: 20px;     /* Alineado a la derecha */
   background: var(--bg-panel); border: 1px solid var(--border-primary);
   border-radius: 8px; padding: 6px; min-width: 190px;
   box-shadow: 0 0 30px var(--border-glow), 0 10px 40px rgba(0,0,0,.8);
   opacity: 0; transform: translateY(8px) scale(0.98); pointer-events: none; transition: all 200ms cubic-bezier(.34,1.56,.64,1);
-  backdrop-filter: blur(14px); z-index: 5001;
+  backdrop-filter: blur(14px); z-index: 6000;
 }
 .dock-menu.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
 .dock-menu-item {
@@ -974,6 +976,34 @@ function initDock() {
       closeDockMenu();
     };
   });
+  
+  // Arreglo para abrir/cerrar el menú
+  document.getElementById('menuToggle').onclick = (e) => { 
+    e.stopPropagation(); 
+    document.getElementById('dockMenu').classList.toggle('open'); 
+  };
+  document.addEventListener('click', (e) => { 
+    if(!e.target.closest('.dock-menu-wrap')) closeDockMenu(); 
+  });
+  
+  document.getElementById('liteToggle').onclick = toggleLiteMode;
+  document.getElementById('helpMenuItem').onclick = () => { document.getElementById('helpOverlay').style.display='flex'; closeDockMenu(); };
+  
+  // Lógica para cambiar el icono y texto del botón Móvil/PC
+  const modeBtn = document.getElementById('modeToggle');
+  modeBtn.onclick = () => { 
+    document.body.classList.toggle('mobile-mode'); 
+    const isMobile = document.body.classList.contains('mobile-mode');
+    
+    if (isMobile) {
+      modeBtn.innerHTML = '🖥'; // Icono de PC
+      modeBtn.dataset.label = 'Modo PC';
+    } else {
+      modeBtn.innerHTML = '📱'; // Icono de Móvil
+      modeBtn.dataset.label = 'Modo Móvil';
+    }
+  };
+}
   document.getElementById('menuToggle').onclick = (e) => { e.stopPropagation(); document.getElementById('dockMenu').classList.toggle('open'); };
   document.addEventListener('click', (e) => { if(!e.target.closest('.dock-menu-wrap')) closeDockMenu(); });
   
