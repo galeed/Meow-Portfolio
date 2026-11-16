@@ -2,8 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Quantum-TUI v7.1 Ultimate</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0e14">
+<title>Quantum-TUI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -18,22 +19,21 @@
   --accent-red:#ff5555; --accent-orange:#ffb86c; --accent-purple:#bd93f9;
   --border-dim:#30363d; 
   --font-mono:'JetBrains Mono','Fira Code','Consolas',monospace;
-  --space-xs:4px; --space-sm:8px; --space-md:16px; --space-lg:24px; --space-xl:32px;
   --transition:150ms ease;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 14px; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { font-size: 16px; }
 body {
   background: var(--bg-primary); color: var(--text-primary);
-  font-family: var(--font-mono); font-size: 1rem; line-height: 1.5;
+  font-family: var(--font-mono); line-height: 1.5;
   min-height: 100vh; overflow: hidden;
   -webkit-font-smoothing: antialiased; user-select: none;
 }
 
+/* MATRIX Y CRT */
 #matrix { position: fixed; inset: 0; z-index: 0; opacity: .35; pointer-events: none; transition: opacity 0.3s; }
 body.lite-mode #matrix { opacity: 0.05; }
-
 body::before {
   content:''; position: fixed; inset: 0; pointer-events: none; z-index: 9998;
   background: repeating-linear-gradient(0deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px, rgba(0,0,0,.05) 3px, rgba(0,0,0,.05) 3px);
@@ -41,7 +41,6 @@ body::before {
 }
 body.lite-mode::before { display: none; }
 @keyframes scanline { 0%{background-position:0 0} 100%{background-position:0 100px} }
-
 body::after {
   content:''; position: fixed; inset: 0; pointer-events: none; z-index: 9997;
   background: radial-gradient(ellipse at center, transparent 0%, transparent 55%, rgba(0,0,0,.65) 100%);
@@ -61,6 +60,7 @@ body.lite-mode .window { box-shadow: none !important; border-color: var(--text-m
   100% { transform: translate(0); filter: hue-rotate(0deg); }
 }
 
+/* WINDOWS */
 .window {
   position: absolute; background: var(--bg-panel);
   border: 1px solid var(--border-dim); border-radius: 6px;
@@ -79,23 +79,23 @@ body.lite-mode .window { box-shadow: none !important; border-color: var(--text-m
 }
 .window.minimized { display: none; }
 .window.maximized {
-  top: 20px !important; left: 20px !important;
-  width: calc(100vw - 40px) !important;
-  height: calc(100vh - 100px) !important;
+  top: 10px !important; left: 10px !important;
+  width: calc(100vw - 20px) !important;
+  height: calc(100vh - 90px) !important;
 }
 @keyframes windowIn { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
 
 .window-header {
-  display: flex; align-items: center; gap: var(--space-sm);
+  display: flex; align-items: center; gap: 8px;
   padding: 8px 12px; background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-dim);
-  border-radius: 6px 6px 0 0; font-size: .8rem; color: var(--text-muted);
+  border-radius: 6px 6px 0 0; font-size: 0.8rem; color: var(--text-muted);
   cursor: grab; user-select: none;
 }
 .window-header:active { cursor: grabbing; }
 .window-dots { display: flex; gap: 6px; }
 .window-dots span {
-  width: 11px; height: 11px; border-radius: 50%;
+  width: 12px; height: 12px; border-radius: 50%;
   background: var(--accent-red); box-shadow: 0 0 6px currentColor;
   cursor: pointer; transition: var(--transition);
 }
@@ -103,9 +103,10 @@ body.lite-mode .window { box-shadow: none !important; border-color: var(--text-m
 .window-dots span:nth-child(2) { background: var(--accent-yellow); }
 .window-dots span:nth-child(3) { background: var(--text-primary); }
 .window-title { flex: 1; text-align: center; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
-.window-body { flex: 1; padding: var(--space-md); overflow-y: auto; font-size: .85rem; scrollbar-width: thin; scrollbar-color: var(--border-primary) var(--bg-secondary); user-select: text; }
+.window-body { flex: 1; padding: 16px; overflow-y: auto; font-size: 0.85rem; scrollbar-width: thin; scrollbar-color: var(--border-primary) var(--bg-secondary); user-select: text; -webkit-overflow-scrolling: touch;}
 .resize-handle { position: absolute; right: 0; bottom: 0; width: 16px; height: 16px; cursor: nwse-resize; background: linear-gradient(135deg, transparent 50%, var(--border-dim) 50%, var(--border-dim) 60%, transparent 60%, transparent 70%, var(--border-dim) 70%, var(--border-dim) 80%, transparent 80%); }
 
+/* DOCK */
 #dock {
   position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
   background: rgba(13,17,23,.92); border: 1px solid var(--border-dim);
@@ -119,19 +120,19 @@ body.lite-mode .window { box-shadow: none !important; border-color: var(--text-m
   border-radius: 10px; font-family: var(--font-mono); font-size: 1.25rem; cursor: pointer;
   transition: all 200ms cubic-bezier(.34,1.56,.64,1);
   display: flex; align-items: center; justify-content: center;
-  width: 46px; height: 46px; position: relative;
+  width: 44px; height: 44px; position: relative;
 }
-.dock-btn:hover { color: var(--text-primary); border-color: var(--border-primary); box-shadow: 0 0 14px var(--border-glow); transform: translateY(-6px) scale(1.08); }
+.dock-btn:hover, .dock-btn:active { color: var(--text-primary); border-color: var(--border-primary); box-shadow: 0 0 14px var(--border-glow); transform: translateY(-4px) scale(1.05); }
 .dock-btn.active { color: var(--bg-primary); background: var(--text-primary); border-color: var(--text-primary); }
 .dock-btn::after {
   content: attr(data-label); position: absolute; bottom: calc(100% + 10px); left: 50%;
   transform: translateX(-50%) translateY(4px); background: var(--bg-panel); color: var(--text-primary);
   border: 1px solid var(--border-primary); padding: 3px 10px; border-radius: 4px;
-  font-size: .68rem; white-space: nowrap; opacity: 0; pointer-events: none; transition: all 180ms ease; box-shadow: var(--glow);
+  font-size: 0.68rem; white-space: nowrap; opacity: 0; pointer-events: none; transition: all 180ms ease; box-shadow: var(--glow);
 }
 .dock-btn:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
-.dock-sep { width: 1px; height: 32px; background: var(--border-dim); margin: 0 4px; }
-#windowCounter { color: var(--text-muted); font-size: .7rem; padding: 0 6px; align-self: center; font-weight: 700; }
+.dock-sep { width: 1px; height: 30px; background: var(--border-dim); margin: 0 4px; }
+#windowCounter { color: var(--text-muted); font-size: 0.7rem; padding: 0 6px; align-self: center; font-weight: 700; }
 
 .dock-menu-wrap { position: relative; }
 .dock-menu {
@@ -144,43 +145,78 @@ body.lite-mode .window { box-shadow: none !important; border-color: var(--text-m
 }
 .dock-menu.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
 .dock-menu-item {
-  display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
   color: var(--text-secondary); border-radius: 5px; font-family: var(--font-mono);
-  font-size: .82rem; cursor: pointer; transition: all 120ms ease; border: none; background: transparent; width: 100%; text-align: left;
+  font-size: 0.85rem; cursor: pointer; transition: all 120ms ease; border: none; background: transparent; width: 100%; text-align: left;
 }
 .dock-menu-item:hover { background: var(--bg-hover); color: var(--text-primary); }
-.dock-menu-item .mi-icon { font-size: 1rem; width: 20px; text-align: center; }
+.dock-menu-item .mi-icon { font-size: 1.1rem; width: 20px; text-align: center; }
 .dock-menu-divider { height: 1px; background: var(--border-dim); margin: 4px 0; }
 
-.swatch { width: 22px; height: 22px; border: 2px solid transparent; border-radius: 3px; transition: var(--transition); cursor: pointer; position: relative; display:inline-block;}
+/* UTILIDADES */
+.swatch { width: 24px; height: 24px; border: 2px solid transparent; border-radius: 4px; transition: var(--transition); cursor: pointer; position: relative; display:inline-block;}
 .swatch:hover { transform: scale(1.15); border-color: #fff; }
 .swatch.active { border-color: #fff; box-shadow: 0 0 10px #fff; }
 
-.piano-key { background: var(--bg-secondary); border: 1px solid var(--border-dim); border-radius: 0 0 5px 5px; cursor: pointer; transition: all 0.1s; position: relative; }
+.piano-key { background: var(--bg-secondary); border: 1px solid var(--border-dim); border-radius: 0 0 5px 5px; cursor: pointer; transition: all 0.1s; position: relative; touch-action: manipulation;}
 .piano-key:hover { background: var(--bg-hover); border-color: var(--text-primary); }
 .piano-key.active { background: var(--text-primary); color: var(--bg-primary); transform: scale(0.95); box-shadow: 0 0 15px var(--border-glow); }
 
-.hack-input { background: transparent; border: none; outline: none; color: var(--accent-red); font-family: var(--font-mono); font-size: 1.2rem; text-align: center; width: 100%; letter-spacing: 5px; }
+.hack-input { background: transparent; border: none; outline: none; color: var(--accent-red); font-family: var(--font-mono); font-size: 1.5rem; text-align: center; width: 100%; letter-spacing: 5px; }
 
-body.mobile-mode { overflow: auto; }
-body.mobile-mode #desktop { position: relative; overflow: visible; padding: 16px 16px 110px; display: flex; flex-direction: column; gap: 16px; min-height: 100vh; }
-body.mobile-mode .window { position: relative !important; left: auto !important; top: auto !important; width: 100% !important; height: auto !important; min-height: 0; transform: none !important; animation: none; margin-bottom: 10px;}
-body.mobile-mode .window.maximized { position: relative !important; width: 100% !important; height: auto !important; top: auto !important; left: auto !important; }
-body.mobile-mode .window .resize-handle { display: none; }
-body.mobile-mode .window-body { max-height: none; overflow: visible; }
-body.mobile-mode #dock { bottom: 8px; padding: 6px 8px; gap: 4px; border-radius: 16px; max-width: calc(100vw - 16px); flex-wrap: wrap; justify-content: center;}
-body.mobile-mode .dock-btn { width: 40px; height: 40px; font-size: 1.1rem; border-radius: 8px; }
+/* ================================================================
+   RESPONSIVE ADAPTATION
+   ================================================================ */
 
-.dpad { display: none; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 150px; margin: 15px auto 0; }
-body.mobile-mode .game-window .dpad { display: grid; }
-.dpad-btn { background: var(--bg-panel); border: 1px solid var(--border-primary); color: var(--text-primary); padding: 15px; border-radius: 5px; text-align: center; font-size: 1.2rem; cursor: pointer; user-select: none; }
-.dpad-btn:active { background: var(--text-primary); color: var(--bg-primary); }
-.dpad-empty { visibility: hidden; }
+/* 1. DISPOSITIVOS MÓVILES Y TABLETS (Fuerza modo apilado) */
+@media (max-width: 1024px), (pointer: coarse) {
+  #desktop {
+    position: relative; overflow-y: auto; overflow-x: hidden;
+    padding: 12px 12px 100px 12px; display: flex; flex-direction: column; gap: 12px; min-height: 100vh;
+  }
+  .window {
+    position: relative !important; left: auto !important; top: auto !important;
+    width: 100% !important; height: auto !important; min-height: 250px;
+    transform: none !important; animation: none;
+  }
+  .window.maximized { position: relative !important; width: 100% !important; height: auto !important; top: auto !important; left: auto !important; }
+  .window .resize-handle { display: none; }
+  .window-body { max-height: none; overflow: visible; }
+  
+  /* Dock optimizado para móvil */
+  #dock {
+    bottom: 8px; padding: 6px 8px; gap: 4px; border-radius: 16px; 
+    max-width: calc(100vw - 16px); flex-wrap: wrap; justify-content: center;
+  }
+  .dock-btn { width: 40px; height: 40px; font-size: 1.1rem; border-radius: 8px; }
+  .dock-btn::after { display: none; } /* Quita tooltips en móvil */
+  .dock-menu { right: -20px; bottom: calc(100% + 8px); }
 
-#bootScreen { position: fixed; inset: 0; background: #000; z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-primary); font-family: var(--font-mono); padding: var(--space-lg); transition: opacity 600ms ease; }
+  /* D-Pad para juegos táctiles */
+  .dpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 160px; margin: 15px auto 0; }
+  .dpad-btn { background: var(--bg-panel); border: 1px solid var(--border-primary); color: var(--text-primary); padding: 15px; border-radius: 5px; text-align: center; font-size: 1.2rem; cursor: pointer; user-select: none; touch-action: manipulation; }
+  .dpad-btn:active { background: var(--text-primary); color: var(--bg-primary); }
+  .dpad-empty { visibility: hidden; }
+}
+
+/* 2. DISPOSITIVOS MUY PEQUEÑOS (Ajustes extra) */
+@media (max-width: 400px) {
+  html { font-size: 14px; }
+  .piano-key { font-size: 8px; }
+  .window-body { padding: 12px; }
+  .dock-btn { width: 36px; height: 36px; font-size: 1rem; }
+  #windowCounter { display: none; } /* Ocultar contador en pantallas ultra pequeñas */
+  .dock-sep { display: none; }
+}
+
+/* 3. CANVAS RESPONSIVOS */
+canvas { max-width: 100%; height: auto; object-fit: contain; }
+
+/* 4. UI BOOT SCREEN */
+#bootScreen { position: fixed; inset: 0; background: #000; z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-primary); font-family: var(--font-mono); padding: 20px; transition: opacity 600ms ease; }
 #bootScreen.fade-out { opacity: 0; pointer-events: none; }
-.boot-logo { font-size: clamp(6px,1vw,12px); white-space: pre; line-height: 1.1; text-shadow: var(--glow); margin-bottom: var(--space-lg); color: var(--text-primary); }
-.boot-line { margin-bottom: 4px; opacity: 0; animation: bootLine 200ms forwards; }
+.boot-logo { font-size: clamp(6px, 1vw, 12px); white-space: pre; line-height: 1.1; text-shadow: var(--glow); margin-bottom: 20px; color: var(--text-primary); }
+.boot-line { margin-bottom: 4px; opacity: 0; animation: bootLine 200ms forwards; font-size: 0.8rem;}
 @keyframes bootLine { to{opacity:1} }
 </style>
 </head>
@@ -193,7 +229,7 @@ body.mobile-mode .game-window .dpad { display: grid; }
   <button class="dock-btn" data-open="system" data-label="Inicio">🖥</button>
   <button class="dock-btn" data-open="shell" data-label="Consola">❯</button>
   <button class="dock-btn" data-open="music" data-label="Música">🎵</button>
-  <button class="dock-btn dock-toggle" id="modeToggle" data-label="Móvil/PC">📱</button>
+  <button class="dock-btn" id="modeToggle" data-label="Móvil/PC">📱</button>
   <button class="dock-btn" id="liteToggle" data-label="Modo Lite">🔋</button>
   <div class="dock-sep"></div>
   <span id="windowCounter">0/4</span>
@@ -220,7 +256,7 @@ body.mobile-mode .game-window .dpad { display: grid; }
 
 <div class="help-overlay" id="helpOverlay" style="position:fixed;inset:0;background:rgba(10,14,20,.92);backdrop-filter:blur(4px);z-index:10000;display:none;align-items:center;justify-content:center;padding:20px;">
   <div style="background:var(--bg-panel);border:1px solid var(--border-primary);border-radius:6px;padding:20px;max-width:600px;width:100%;box-shadow:0 0 40px var(--border-glow);">
-    <h2 style="color:var(--accent-yellow);margin-bottom:15px;">❯ COMANDOS DE TECLADO (Hyprland Style)</h2>
+    <h2 style="color:var(--accent-yellow);margin-bottom:15px;">❯ ATAJOS DE TECLADO (Hyprland)</h2>
     <div style="display:grid;grid-template-columns:120px 1fr;gap:10px;font-size:0.9rem;">
       <span style="color:var(--accent-cyan);font-weight:bold;">Alt + Q</span><span>Cerrar ventana enfocada</span>
       <span style="color:var(--accent-cyan);font-weight:bold;">Alt + 1..4</span><span>Enfocar ventana (1 a 4)</span>
@@ -228,11 +264,11 @@ body.mobile-mode .game-window .dpad { display: grid; }
       <span style="color:var(--accent-cyan);font-weight:bold;">Alt + M</span><span>Móvil / PC</span>
       <span style="color:var(--accent-cyan);font-weight:bold;">Tab (Shell)</span><span>Auto-completar comandos</span>
     </div>
-    <button onclick="closeHelp()" style="margin-top:20px;background:var(--text-primary);color:var(--bg-primary);border:none;padding:8px 15px;border-radius:4px;cursor:pointer;font-weight:bold;">Cerrar</button>
+    <button onclick="closeHelp()" style="margin-top:20px;background:var(--text-primary);color:var(--bg-primary);border:none;padding:8px 15px;border-radius:4px;cursor:pointer;font-weight:bold;width:100%;">Cerrar</button>
   </div>
 </div>
 
-<div class="toast" id="toast" style="position:fixed;bottom:90px;right:24px;background:var(--bg-panel);border:1px solid var(--border-primary);color:var(--text-primary);padding:8px 16px;border-radius:4px;font-size:.8rem;box-shadow:var(--glow);z-index:10001;opacity:0;transform:translateY(10px);transition:all 300ms ease;pointer-events:none;"></div>
+<div class="toast" id="toast" style="position:fixed;bottom:90px;right:20px;background:var(--bg-panel);border:1px solid var(--border-primary);color:var(--text-primary);padding:10px 16px;border-radius:4px;font-size:.85rem;box-shadow:var(--glow);z-index:10001;opacity:0;transform:translateY(10px);transition:all 300ms ease;pointer-events:none;"></div>
 
 <div id="bootScreen">
   <pre class="boot-logo">
@@ -243,7 +279,7 @@ body.mobile-mode .game-window .dpad { display: grid; }
 | |  | | |___| |__| | \  /\  /   
 |_|  |_|_____|\____/   \/  \/    
   </pre>
-  <div id="bootLines" style="font-size:.8rem;color:var(--text-secondary);max-width:600px;width:100%;"></div>
+  <div id="bootLines" style="color:var(--text-secondary);max-width:600px;width:100%;"></div>
 </div>
 
 <script>
@@ -257,6 +293,7 @@ const State = {
 const MAX_WINDOWS = 4;
 const TILE_GAP = 10;
 const DOCK_RESERVED = 90;
+const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
 
 const PALETTES = {
   '#00ff9c': { name: 'Green',  secondary: '#7ee787' },
@@ -369,7 +406,7 @@ function getTileRects(count) {
 }
 
 function retileWindows() {
-  if (document.body.classList.contains('mobile-mode')) return;
+  if (window.innerWidth <= 1024 || isTouchDevice) return; // No aplicar tiling en móvil/tablet
   const ids = Object.keys(State.windows).filter(id => !State.windows[id].classList.contains('minimized') && !State.windows[id].classList.contains('maximized'));
   const rects = getTileRects(ids.length);
   ids.forEach((id, i) => {
@@ -425,18 +462,32 @@ function createWindow({ id, title, body = '', footer = '', className = '' }) {
   State.windows[id] = win;
 
   win.addEventListener('mousedown', () => bringToFront(id));
+  win.addEventListener('touchstart', () => bringToFront(id), {passive: true});
+
   let isDragging = false, startX, startY, startLeft, startTop;
-  win.querySelector('.window-header').addEventListener('mousedown', (e) => {
-    if (e.target.closest('.window-dots') || document.body.classList.contains('mobile-mode')) return;
-    isDragging = true; startX = e.clientX; startY = e.clientY; startLeft = win.offsetLeft; startTop = win.offsetTop;
-    win.classList.add('dragging'); win.classList.remove('maximized'); bringToFront(id); e.preventDefault();
-  });
-  document.addEventListener('mousemove', (e) => {
+  
+  const dragStart = (e) => {
+    if (e.target.closest('.window-dots') || window.innerWidth <= 1024 || isTouchDevice) return;
+    isDragging = true; 
+    startX = e.clientX || e.touches[0].clientX; startY = e.clientY || e.touches[0].clientY; 
+    startLeft = win.offsetLeft; startTop = win.offsetTop;
+    win.classList.add('dragging'); win.classList.remove('maximized'); bringToFront(id); 
+  };
+  const dragMove = (e) => {
     if (!isDragging) return;
-    win.style.left = Math.max(-50, Math.min(window.innerWidth - 100, startLeft + (e.clientX - startX))) + 'px';
-    win.style.top = Math.max(0, Math.min(window.innerHeight - 60, startTop + (e.clientY - startY))) + 'px';
-  });
-  document.addEventListener('mouseup', () => { isDragging = false; win.classList.remove('dragging'); });
+    const cx = e.clientX || (e.touches && e.touches[0].clientX);
+    const cy = e.clientY || (e.touches && e.touches[0].clientY);
+    win.style.left = Math.max(-50, Math.min(window.innerWidth - 100, startLeft + (cx - startX))) + 'px';
+    win.style.top = Math.max(0, Math.min(window.innerHeight - 60, startTop + (cy - startY))) + 'px';
+  };
+  const dragEnd = () => { isDragging = false; win.classList.remove('dragging'); };
+
+  win.querySelector('.window-header').addEventListener('mousedown', dragStart);
+  win.querySelector('.window-header').addEventListener('touchstart', dragStart, {passive: true});
+  document.addEventListener('mousemove', dragMove);
+  document.addEventListener('touchmove', dragMove, {passive: false});
+  document.addEventListener('mouseup', dragEnd);
+  document.addEventListener('touchend', dragEnd);
 
   win.querySelectorAll('.window-dots span').forEach(dot => {
     dot.addEventListener('click', (e) => {
@@ -474,7 +525,7 @@ const BUILDERS = {
       </div>
       <div style="margin-top:15px;border:1px solid var(--accent-yellow);padding:10px;text-align:center;color:var(--accent-yellow);font-weight:bold;font-size:0.8rem;">OPEN FOR COLLABORATIONS</div>
       <div style="margin-top:15px;font-size:0.8rem;"><span style="color:var(--accent-cyan);">Palette:</span></div>
-      <div style="display:flex;gap:6px;margin-top:5px;" id="paletteSwatches"></div>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;" id="paletteSwatches"></div>
     `;
     const win = createWindow({ id: 'system', title: 'root@quantum-box: ~/system', body });
     if (win) {
@@ -511,30 +562,29 @@ const BUILDERS = {
     const body = `
       <h2 style="color:var(--accent-yellow);border-bottom:1px dashed var(--border-dim);padding-bottom:5px;">📁 /PROYECTOS</h2>
       <div style="margin-top:15px; display:flex; flex-direction:column; gap:8px;">
-        <div onclick="alert('Abriendo Proyecto A...')" style="cursor:pointer; border:1px solid var(--border-dim); padding:10px; border-radius:4px; background:var(--bg-secondary);">
+        <div onclick="alert('Abriendo Proyecto A...')" style="cursor:pointer; border:1px solid var(--border-dim); padding:12px; border-radius:4px; background:var(--bg-secondary);">
           <div style="color:var(--accent-cyan); font-weight:bold;">📄 aetheria-dsp.js</div>
           <div style="font-size:0.75rem; color:var(--text-muted);">Audio Worklet para sintetizador web.</div>
         </div>
-        <div onclick="alert('Abriendo Proyecto B...')" style="cursor:pointer; border:1px solid var(--border-dim); padding:10px; border-radius:4px; background:var(--bg-secondary);">
+        <div onclick="alert('Abriendo Proyecto B...')" style="cursor:pointer; border:1px solid var(--border-dim); padding:12px; border-radius:4px; background:var(--bg-secondary);">
           <div style="color:var(--accent-cyan); font-weight:bold;">📦 hyperedge-core.rs</div>
           <div style="font-size:0.75rem; color:var(--text-muted);">Protocolo de caché distribuido en Rust.</div>
         </div>
-        <div onclick="alert('Abriendo Proyecto C...')" style="cursor:pointer; border:1px solid var(--border-dim); padding:10px; border-radius:4px; background:var(--bg-secondary);">
+        <div onclick="alert('Abriendo Proyecto C...')" style="cursor:pointer; border:1px solid var(--border-dim); padding:12px; border-radius:4px; background:var(--bg-secondary);">
           <div style="color:var(--accent-cyan); font-weight:bold;">📜 kernel-ai-cli.py</div>
           <div style="font-size:0.75rem; color:var(--text-muted);">Co-piloto de terminal con LLM local.</div>
         </div>
       </div>
     `;
-    return createWindow({ id: 'files', title: '📁 File Manager - /projects', body });
+    return createWindow({ id: 'files', title: '📁 File Manager', body });
   },
 
   shell: () => {
-    const footer = `<div style="display:flex;padding:10px;background:var(--bg-secondary);border-top:1px solid var(--border-dim);gap:8px;"><span style="color:var(--accent-cyan);">guest@quantum-box:~$</span><input id="shellInput" style="flex:1;background:transparent;border:none;outline:none;color:var(--text-primary);font-family:var(--font-mono);" autocomplete="off"></div>`;
-    const body = `<div id="shellOutput" style="font-size:0.85rem;"><div style="color:var(--text-primary);">Shell v7.1 (Tab para autocompletar)</div></div>`;
+    const footer = `<div style="display:flex;padding:12px;background:var(--bg-secondary);border-top:1px solid var(--border-dim);gap:8px;"><span style="color:var(--accent-cyan);">$</span><input id="shellInput" style="flex:1;background:transparent;border:none;outline:none;color:var(--text-primary);font-family:var(--font-mono);font-size:16px;" autocomplete="off"></div>`;
+    const body = `<div id="shellOutput" style="font-size:0.85rem;"><div style="color:var(--text-primary);">Shell v7.2 (Tab para autocompletar)</div></div>`;
     const win = createWindow({ id: 'shell', title: 'shell', body, footer });
     if (win) {
       const input = win.querySelector('#shellInput');
-      setTimeout(() => input.focus(), 100);
       input.addEventListener('keydown', (e) => {
         playKeySound();
         if (e.key === 'Enter') {
@@ -566,7 +616,7 @@ const BUILDERS = {
     const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25];
     let keysHtml = '';
     notes.forEach((freq, i) => {
-      keysHtml += `<div class="piano-key" data-freq="${freq}" style="width: 12.5%; height: 150px; display:inline-block; border-right:1px solid #000; text-align:center; padding-top:120px; font-size:10px; box-sizing:border-box;">${['C','D','E','F','G','A','B','C'][i]}</div>`;
+      keysHtml += `<div class="piano-key" data-freq="${freq}" style="width: 12.5%; height: 120px; display:inline-block; border-right:1px solid #000; text-align:center; padding-top:90px; font-size:10px; box-sizing:border-box;">${['C','D','E','F','G','A','B','C'][i]}</div>`;
     });
     const body = `
       <h2 style="color:var(--accent-yellow);border-bottom:1px dashed var(--border-dim);padding-bottom:5px;">🎹 PIANO (A,S,D,F,G,H,J,K)</h2>
@@ -582,15 +632,16 @@ const BUILDERS = {
         const idx = keyMap[e.key.toLowerCase()];
         if (idx !== undefined) {
           playNote(notes[idx]);
-          keys[idx].style.background = 'var(--text-primary)';
-          setTimeout(() => keys[idx].style.background = '', 150);
+          keys[idx].classList.add('active');
+          setTimeout(() => keys[idx].classList.remove('active'), 150);
         }
       };
       document.addEventListener('keydown', handleKey);
       keys.forEach((k, i) => {
-        k.onmousedown = () => { playNote(notes[i]); k.style.background = 'var(--text-primary)'; };
-        k.onmouseup = () => { k.style.background = ''; };
-        k.onmouseleave = () => { k.style.background = ''; };
+        const press = (e) => { e.preventDefault(); playNote(notes[i]); k.classList.add('active'); };
+        const release = (e) => { e.preventDefault(); k.classList.remove('active'); };
+        k.addEventListener('mousedown', press); k.addEventListener('mouseup', release); k.addEventListener('mouseleave', release);
+        k.addEventListener('touchstart', press, {passive: false}); k.addEventListener('touchend', release);
       });
       win._cleanup = () => document.removeEventListener('keydown', handleKey);
     }
@@ -600,19 +651,19 @@ const BUILDERS = {
   drum: () => {
     const body = `
       <h2 style="color:var(--accent-yellow);border-bottom:1px dashed var(--border-dim);padding-bottom:5px;">🥁 DRUM MACHINE</h2>
-      <div id="drumGrid" style="display:grid; grid-template-columns:50px repeat(16,1fr); gap:2px; margin-top:15px;"></div>
+      <div id="drumGrid" style="display:grid; grid-template-columns:40px repeat(16,1fr); gap:2px; margin-top:15px;"></div>
       <div style="margin-top:15px; display:flex; justify-content:space-between;">
-        <button onclick="toggleDrum()" style="background:var(--text-primary);color:var(--bg-primary);padding:5px 15px;border:none;border-radius:3px;cursor:pointer; font-weight:bold;">PLAY/STOP</button>
-        <button onclick="clearDrum()" style="background:transparent;border:1px solid var(--border-dim);color:var(--text-primary);padding:5px 15px;border-radius:3px;cursor:pointer;">CLEAR</button>
+        <button onclick="toggleDrum()" style="background:var(--text-primary);color:var(--bg-primary);padding:8px 15px;border:none;border-radius:3px;cursor:pointer; font-weight:bold;">PLAY/STOP</button>
+        <button onclick="clearDrum()" style="background:transparent;border:1px solid var(--border-dim);color:var(--text-primary);padding:8px 15px;border-radius:3px;cursor:pointer;">CLEAR</button>
       </div>
     `;
     const win = createWindow({ id: 'drum', title: 'Drum Sequencer', body });
     if (win) {
       const grid = win.querySelector('#drumGrid');
       for (let c = 0; c < 4; c++) {
-        grid.innerHTML += `<div style="color:var(--accent-cyan);font-size:0.7rem;text-align:right;padding-right:5px;">${['Kick','Snare','Hat','Clap'][c]}</div>`;
+        grid.innerHTML += `<div style="color:var(--accent-cyan);font-size:0.65rem;text-align:right;padding-right:5px;">${['Kick','Snare','Hat','Clap'][c]}</div>`;
         for (let s = 0; s < 16; s++) {
-          grid.innerHTML += `<div class="drum-step" data-c="${c}" data-s="${s}" style="background:var(--bg-secondary);border:1px solid var(--border-dim);height:20px;cursor:pointer;"></div>`;
+          grid.innerHTML += `<div class="drum-step" data-c="${c}" data-s="${s}" style="background:var(--bg-secondary);border:1px solid var(--border-dim);height:24px;cursor:pointer;"></div>`;
         }
       }
       win.querySelectorAll('.drum-step').forEach(step => {
@@ -677,7 +728,7 @@ const BUILDERS = {
       <h2 style="color:var(--accent-red);text-align:center;">⚠️ FIREWALL DETECTADO</h2>
       <p style="font-size:0.8rem;text-align:center;margin:10px 0;">Adivina la contraseña de 4 dígitos.</p>
       <div style="font-size:2rem;text-align:center;color:var(--accent-red);margin:20px 0;" id="hackTimer">15s</div>
-      <input type="text" class="hack-input" id="hackInput" maxlength="4" placeholder="0000" autocomplete="off">
+      <input type="text" inputmode="numeric" class="hack-input" id="hackInput" maxlength="4" placeholder="0000" autocomplete="off">
       <div id="hackLog" style="font-size:0.75rem;color:var(--text-muted);margin-top:15px;text-align:center;"></div>
     `;
     const win = createWindow({ id: 'hack', title: 'BruteForce.sh', body });
@@ -686,9 +737,6 @@ const BUILDERS = {
   }
 };
 
-/* ================================================================
-   LÓGICA DE JUEGOS COMPLETA
-   ================================================================ */
 let snakeGame;
 window.snakeDir = (d) => {
   if (!snakeGame) return;
@@ -726,7 +774,6 @@ function startSnake(win) {
   win._cleanup = () => { clearInterval(loop); document.removeEventListener('keydown', keyH); };
 }
 
-/* TETRIS */
 let tGame;
 window.tetrisMove = (dir) => {
   if(!tGame) return;
@@ -817,11 +864,9 @@ function startTetris(win) {
   drawT();
 }
 
-/* 2048 */
 let g2048;
 window.move2048 = (dir) => {
   if(!g2048) return;
-  let moved = false;
   const slide = (row) => {
     let arr = row.filter(v => v);
     let merged = []; let i = 0;
@@ -903,7 +948,10 @@ function initDock() {
   
   document.getElementById('liteToggle').onclick = toggleLiteMode;
   document.getElementById('helpMenuItem').onclick = () => { document.getElementById('helpOverlay').style.display='flex'; closeDockMenu(); };
-  document.getElementById('modeToggle').onclick = () => { document.body.classList.toggle('mobile-mode'); };
+  document.getElementById('modeToggle').onclick = () => { 
+    // Alternar modo manual (para forzar PC en móvil, o viceversa)
+    document.body.classList.toggle('mobile-mode'); 
+  };
 }
 function closeDockMenu() { document.getElementById('dockMenu').classList.remove('open'); }
 window.closeHelp = () => document.getElementById('helpOverlay').style.display='none';
@@ -914,7 +962,7 @@ async function init() {
   
   initMatrix(); initDock();
   
-  const bootLines = ['[ OK ] Initializing v7.1 Ultimate...', '[ OK ] Loading piano module...', '[ OK ] Building file manager...', '[ OK ] 🐱 MEOW. Ready.'];
+  const bootLines = ['[ OK ] Initializing v7.2 Responsive...', '[ OK ] Loading piano module...', '[ OK ] Building file manager...', '[ OK ] 🐱 MEOW. Ready.'];
   const bEl = document.getElementById('bootLines');
   for (let i=0; i<bootLines.length; i++) {
     bEl.innerHTML += `<div style="opacity:0;animation:bootLine 0.2s forwards;">${bootLines[i]}</div>`;
